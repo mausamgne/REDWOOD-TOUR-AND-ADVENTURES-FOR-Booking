@@ -111,25 +111,88 @@ export default function Home() {
     muirCategory?.is_recommended || "RECOMMENDED";
 
   /* ================= OTHER SECTIONS ================= */
-  const sanFranciscoTours =
-    homepageData?.top_navigation?.find((cat) =>
-      cat.cat_name?.toLowerCase().includes("san francisco")
-    )?.tours || [];
+  const sanFranciscoCategory =
+  homepageData?.top_navigation?.find((cat) =>
+    cat.cat_name?.toLowerCase().includes("san francisco")
+  ) || {};
 
-  const wineTours =
-    homepageData?.top_navigation?.find((cat) =>
-      cat.cat_name?.toLowerCase().includes("wine")
-    )?.tours || [];
+const sanFranciscoTours = sanFranciscoCategory?.tours || [];
 
-  const yosemiteTours =
-    homepageData?.top_navigation?.find((cat) =>
-      cat.cat_name?.toLowerCase().includes("yosemite")
-    )?.tours || [];
+const sanFranciscoHeading =
+  sanFranciscoCategory?.cat_home_page_text ||
+  sanFranciscoCategory?.cat_main_title ||
+  sanFranciscoCategory?.cat_name ||
+  "San Francisco Premier Exclusive Private Tours";
 
-  const montereyTours =
-    homepageData?.top_navigation?.find((cat) =>
-      cat.cat_name?.toLowerCase().includes("monterey")
-    )?.tours || [];
+const sanFranciscoViewAllText =
+  sanFranciscoCategory?.view_all_button_text || "VIEW ALL";
+
+  const wineCategory =
+  homepageData?.top_navigation?.find((cat) =>
+    cat.cat_name?.toLowerCase().includes("wine")
+  ) || {};
+
+const wineTours = wineCategory?.tours || [];
+
+const wineHeading =
+  wineCategory?.cat_home_page_text ||
+  wineCategory?.cat_main_title ||
+  wineCategory?.cat_name ||
+  "Wine Country Tours";
+
+const wineMoreDetailsText =
+  wineCategory?.more_details_button_text || "MORE DETAILS";
+
+const wineViewAllText =
+  wineCategory?.view_all_button_text || "VIEW ALL";
+
+const winePopularText =
+  wineCategory?.is_popular || "POPULAR";
+
+const wineRecommendedText =
+  wineCategory?.is_recommended || "RECOMMENDED";
+    
+
+  const yosemiteCategory =
+  homepageData?.top_navigation?.find((cat) =>
+    cat.cat_name?.toLowerCase().includes("yosemite")
+  ) || {};
+
+const yosemiteTours = yosemiteCategory?.tours || [];
+
+const yosemiteHeading =
+  yosemiteCategory?.cat_home_page_text ||
+  yosemiteCategory?.cat_main_title ||
+  yosemiteCategory?.cat_name ||
+  "Yosemite Tours";
+
+const yosemiteViewAllText =
+  yosemiteCategory?.view_all_button_text || "VIEW ALL";
+
+  const montereyCategory =
+  homepageData?.top_navigation?.find((cat) =>
+    cat.cat_name?.toLowerCase().includes("monterey")
+  ) || {};
+
+const montereyTours = montereyCategory?.tours || [];
+
+const montereyHeading =
+  montereyCategory?.cat_home_page_text ||
+  montereyCategory?.cat_main_title ||
+  montereyCategory?.cat_name ||
+  "Monterey Tours";
+
+const montereyMoreDetailsText =
+  montereyCategory?.more_details_button_text || "MORE DETAILS";
+
+const montereyViewAllText =
+  montereyCategory?.view_all_button_text || "VIEW ALL";
+
+const montereyPopularText =
+  montereyCategory?.is_popular || "POPULAR";
+
+const montereyRecommendedText =
+  montereyCategory?.is_recommended || "RECOMMENDED";
 
   const outdoorData = homepageData?.outdoor_tours?.[0];
 
@@ -151,45 +214,100 @@ const chatText = homepageInfo?.live_chat_text;
 
       {/* REDWOOD */}
       <RedwoodToursSection
-        tours={redwoodTours}
-        sectionTitle={redwoodTitle}
-        moreDetailsText={redwoodMoreDetailsText}
-        viewAllText={redwoodViewAllText}
-        popularText={redwoodPopularText}
-        recommendedText={redwoodRecommendedText}
-      />
+  tours={redwoodTours}
+  sectionTitle={redwoodTitle}
+  categorySlug={
+    redwoodCategory?.cat_slug ||
+    redwoodCategory?.cat_name?.toLowerCase().replace(/\s+/g, "-") ||
+    "redwood"
+  }
+  moreDetailsText={redwoodMoreDetailsText}
+  viewAllText={redwoodViewAllText}
+  popularText={redwoodPopularText}
+  recommendedText={redwoodRecommendedText}
+/>
 
       {/* ALCATRAZ */}
       <AlcatrazToursSection
-        tours={alcatrazTours}
-        sectionTitle={alcatrazHeading}
-        moreDetailsText={alcatrazMoreDetailsText}
-        viewAllText={alcatrazViewAllText}
-        popularText={alcatrazPopularText}
-        recommendedText={alcatrazRecommendedText}
-      />
+  tours={alcatrazTours}
+  sectionTitle={alcatrazHeading}
+  categorySlug={
+    alcatrazCategory?.cat_slug ||
+    alcatrazCategory?.cat_name?.toLowerCase().replace(/\s+/g, "-") ||
+    "alcatraz"
+  }
+  moreDetailsText={alcatrazMoreDetailsText}
+  viewAllText={alcatrazViewAllText}
+  popularText={alcatrazPopularText}
+  recommendedText={alcatrazRecommendedText}
+/>
 
       {/* MUIR WOODS */}
       <MuirWoodsSection
-        tours={muirWoodsTours}
-        sectionTitle={muirHeading}
-        moreDetailsText={muirMoreDetailsText}
-        viewAllText={muirViewAllText}
-        popularText={muirPopularText}
-        recommendedText={muirRecommendedText}
-      />
+  tours={muirWoodsTours}
+  sectionTitle={muirHeading}
+  categorySlug={
+    muirCategory?.cat_slug ||
+    muirCategory?.cat_name?.toLowerCase().replace(/\s+/g, "-") ||
+    "muir-woods"
+  }
+  moreDetailsText={muirMoreDetailsText}
+  viewAllText={muirViewAllText}
+  popularText={muirPopularText}
+  recommendedText={muirRecommendedText}
+/>
 
       {/* SAN FRANCISCO */}
-      <SanFranciscoToursSection tours={sanFranciscoTours} />
+      <SanFranciscoToursSection
+  tours={sanFranciscoTours}
+  sectionTitle={sanFranciscoHeading}
+  categorySlug={
+    sanFranciscoCategory?.cat_slug ||
+    sanFranciscoCategory?.cat_name?.toLowerCase().replace(/\s+/g, "-") ||
+    "san-francisco"
+  }
+  viewAllText={sanFranciscoViewAllText}
+/>
 
       {/* YOSEMITE */}
-      <YosemiteSection tours={yosemiteTours} />
+      <YosemiteSection
+  tours={yosemiteTours}
+  sectionTitle={yosemiteHeading}
+  categorySlug={
+    yosemiteCategory?.cat_slug ||
+    yosemiteCategory?.cat_name?.toLowerCase().replace(/\s+/g, "-") ||
+    "yosemite"
+  }
+  viewAllText={yosemiteViewAllText}
+/>
 
       {/* WINE */}
-      <WineSection tours={wineTours} />
+      <WineSection tours={wineTours} 
+      sectionTitle={wineHeading}
+      categorySlug={
+        wineCategory?.cat_slug ||
+        wineCategory?.cat_name?.toLowerCase().replace(/\s+/g, "-") ||
+        "wine"
+      }
+      moreDetailsText={wineMoreDetailsText}
+      viewAllText={wineViewAllText}
+      popularText={winePopularText}
+      recommendedText={wineRecommendedText}
+    />
 
       {/* MONTEREY */}
-      <MontereySection tours={montereyTours} />
+      <MontereySection tours={montereyTours} 
+      sectionTitle={montereyHeading}
+      categorySlug={
+        montereyCategory?.cat_slug ||
+        montereyCategory?.cat_name?.toLowerCase().replace(/\s+/g, "-") ||
+        "monterey"
+      }
+      moreDetailsText={montereyMoreDetailsText}
+      viewAllText={montereyViewAllText}
+      popularText={montereyPopularText}
+      recommendedText={montereyRecommendedText}
+    />
 
       {/* CTA */}
       <QueryCTA
@@ -203,6 +321,7 @@ const chatText = homepageInfo?.live_chat_text;
       <OutdoorSection
         tours={outdoorTours}
         sectionTitle={outdoorTitle}
+
       />
 
       {/* TESTIMONIALS */}
@@ -214,3 +333,4 @@ const chatText = homepageInfo?.live_chat_text;
     </>
   );
 }
+

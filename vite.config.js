@@ -8,7 +8,7 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
-    // historyApiFallback: true,
+    
     proxy: {
       "/api": {
         target: "https://adminzwy8.redwoodnationalparktours.com",

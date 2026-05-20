@@ -24,8 +24,6 @@ export const getHomepage = async ({
   }
 };
 
-
-
 // 🔥 LOCAL BACKEND API (FINAL FIXED)
 const LOCAL_BASE_URL = "http://localhost:5000/api";
 
@@ -53,3 +51,4 @@ export const createOrder = async (data) => {
     throw err;
   }
 };
+

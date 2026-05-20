@@ -6,8 +6,9 @@ import { useNavigate } from "react-router-dom";
 
 export default function SanFranciscoToursSection({
   tours = [],
-  sectionTitle,
-  categorySlug
+  sectionTitle = "San Francisco Premier Exclusive Private Tours",
+  categorySlug = "san-francisco",
+  viewAllText = "VIEW ALL"
 }) {
 //   const [tours, setTours] = useState([]);
   const [cardsToShow, setCardsToShow] = useState(3);
@@ -116,7 +117,7 @@ export default function SanFranciscoToursSection({
 
       {/* 👇 Custom Fixed Heading */}
       <SectionHeading>
-        San Francisco Premier Exclusive Private Tours
+        {sectionTitle}
       </SectionHeading>
 
       <div className="relative w-full max-w-[1200px] mx-auto overflow-hidden">
@@ -172,10 +173,10 @@ export default function SanFranciscoToursSection({
        <PrimaryButton
   variant="large"
   onClick={() =>
-    navigate(`/category/${sectionTitle.toLowerCase().replace(/\s+/g, "-")}`)
+    navigate(`/category/${categorySlug}`)
   }
 >
-  VIEW ALL
+  {viewAllText}
 </PrimaryButton>
       </div>
     </section>

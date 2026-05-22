@@ -202,8 +202,8 @@ const montereyRecommendedText =
     outdoorData?.cat_main_title ||
     outdoorData?.cat_name ||
     "";
-const chatLink = homepageInfo?.live_chat_link;
-const chatText = homepageInfo?.live_chat_text;
+const chatLink = homepageInfo?.chat_button_link;
+const chatText = homepageInfo?.chat_button_text;
   return (
     <>
       {/* HERO */}
@@ -311,10 +311,10 @@ const chatText = homepageInfo?.live_chat_text;
 
       {/* CTA */}
       <QueryCTA
-   title="Have a Query?"
-   contactNumber={homepageInfo?.contact_number}
-   chatLink={chatLink}
-   chatText={chatText}
+  title="Have a Query?"
+  contactNumber={homepageInfo?.contact_number}
+  chatLink={chatLink}
+  chatText={chatText}
 />
 
       {/* OUTDOOR */}

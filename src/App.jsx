@@ -16,6 +16,14 @@ import AboutUs from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
 import TestimonialsPage from "./pages/TestimonialsPage";
 import ScrollToTop from "./components/common/ScrollToTop";
+import TermsConditions from "./pages/TermsConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import OurGuides from "./pages/OurGuides";
+import Careers from "./pages/Careers";
+import Faqs from "./pages/Faqs";
+import FleetPage from "./pages/FleetPage";
+import Sitemap from "./pages/Sitemap";
+import ExpressCheckout from "./pages/ExpressCheckout";
 export default function App() {
   return (
     <>
@@ -26,6 +34,15 @@ export default function App() {
         <Route path="/about-us" element={<AboutUs />} />
 
         <Route path="/contact-us" element={<ContactUs />} />
+
+        <Route path="terms-and-conditions" element={<TermsConditions />} />
+<Route path="privacy-policy" element={<PrivacyPolicy />} />
+<Route path="our-guides" element={<OurGuides />} />
+<Route path="careers" element={<Careers />} />
+<Route path="faqs" element={<Faqs />} />
+<Route path="fleet-page" element={<FleetPage />} />
+<Route path="sitemap" element={<Sitemap />} />
+<Route path="express-checkout" element={<ExpressCheckout />} />
 
         <Route path="/" element={<Layout />}>
           <Route path="/login" element={<Login />} />

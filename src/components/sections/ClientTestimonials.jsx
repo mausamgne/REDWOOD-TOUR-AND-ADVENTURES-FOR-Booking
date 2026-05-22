@@ -108,26 +108,25 @@ export default function ClientTestimonials({
           >
             {reviews.length > 0 ? (
               reviews.map((review, index) => (
-                
                 <div
                   key={index}
                   className="flex-shrink-0 w-full md:w-1/2 lg:w-1/3 px-4"
                   style={{ width: `${100 / cardsToShow}%` }}
                 >
-                  <div className="bg-white rounded-2xl border border-gray-200 p-10 h-[560px] shadow-sm flex flex-col items-center text-center">
+                  <div className="bg-white rounded-2xl border border-gray-200 p-8 h-[640px] shadow-sm flex flex-col items-center text-center">
                     {/* IMAGE */}
                     {getImage(review) && (
-                      <div className="w-44 h-44 mx-auto rounded-full overflow-hidden mb-6">
+                      <div className="w-36 h-36 mx-auto rounded-full overflow-hidden mb-6 bg-gray-100 flex-shrink-0">
                         <img
                           src={getImage(review)}
                           alt={getName(review)}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover object-center"
                         />
                       </div>
                     )}
 
                     {/* NAME */}
-                    <h3 className="text-2xl font-semibold text-[#2e6d1c]">
+                    <h3 className="text-2xl font-semibold text-[#2e6d1c] min-h-[96px] line-clamp-3">
                       {getName(review)}
                     </h3>
 
@@ -151,7 +150,7 @@ export default function ClientTestimonials({
                     </p>
 
                     {/* DESCRIPTION */}
-                    <p className="text-gray-600 leading-relaxed text-[15px] line-clamp-4 min-h-[120px]">
+                    <p className="text-gray-600 leading-relaxed text-[15px] line-clamp-3 min-h-[90px] mb-6">
                       {review?.review_description ||
                         review?.description ||
                         review?.review ||
@@ -159,11 +158,11 @@ export default function ClientTestimonials({
                         "Amazing experience with Redwood National Park Tours. Highly recommended for families and private groups!"}
                     </p>
                     <Link
-  to={`/testimonials/${review?.id}`}
-  className="bg-[#2e6d1c] text-white px-10 py-4 rounded-full font-semibold inline-block"
->
-  {buttonText} →
-</Link>
+                      to={`/testimonials/${review?.id}`}
+                      className="mt-auto bg-[#2e6d1c] text-white px-10 py-4 rounded-full font-semibold inline-block"
+                    >
+                      {buttonText} →
+                    </Link>
                   </div>
                 </div>
               ))

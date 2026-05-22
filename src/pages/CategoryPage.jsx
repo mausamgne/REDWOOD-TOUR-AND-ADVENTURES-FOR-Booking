@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import TourCard from "../components/sections/TourCard";
 
@@ -6,48 +6,37 @@ export default function CategoryPage() {
 
   const { categorySlug } = useParams();
   const navigate = useNavigate();
+  const { homepageData } = useOutletContext();
 
   const [tours,setTours] = useState([]);
   const [category,setCategory] = useState(null);
   const [loading,setLoading] = useState(true);
 
-  useEffect(()=>{
+  useEffect(() => {
+  window.scrollTo(0, 0);
 
-    window.scrollTo(0,0);
+  if (!homepageData) return;
 
-    fetch(
-    "https://adminzwy8.redwoodnationalparktours.com/api/get_homepage?lang_id=1&website_id=1"
-  )
-    .then(res=>res.json())
-    .then(data=>{
+  const selectedCategory = homepageData?.top_navigation?.find((cat) => {
+    const slug =
+      cat?.cat_slug ||
+      cat?.cat_name
+        ?.toLowerCase()
+        .replace(/&/g, "and")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
 
-      console.log(data);
+    return (
+  slug === categorySlug ||
+  slug.includes(categorySlug) ||
+  categorySlug.includes(slug)
+);
+  });
 
-      const selectedCategory = data?.top_navigation?.find((cat) => {
-  const slug =
-    cat?.cat_slug ||
-    cat?.cat_name
-      ?.toLowerCase()
-      .replace(/&/g, "and")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-
-  return slug === categorySlug;
-});
-
-setCategory(selectedCategory);
-setTours(selectedCategory?.tours || []);
-
-      setLoading(false);
-
-    })
-    .catch(err=>{
-      console.log(err);
-      setLoading(false);
-    });
-
-  },[categorySlug]);
-
+  setCategory(selectedCategory);
+  setTours(selectedCategory?.tours || []);
+  setLoading(false);
+}, [categorySlug, homepageData]);
   if(loading){
     return (
       <div className="py-32 text-center text-5xl font-bold">

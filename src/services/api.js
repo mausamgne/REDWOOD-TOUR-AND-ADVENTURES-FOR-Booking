@@ -1,11 +1,14 @@
-// 🔥 EXTERNAL API (unchanged)
+// External website/admin API
 const EXTERNAL_BASE_URL =
   "https://adminzwy8.redwoodnationalparktours.com/api";
 
-export const getHomepage = async ({
-  langId = 1,
-  websiteId = 1,
-} = {}) => {
+// Your own backend API
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+
+const LOCAL_BASE_URL = `${API_BASE_URL}/api`;
+
+export const getHomepage = async ({ langId = 1, websiteId = 1 } = {}) => {
   try {
     const response = await fetch(
       `${EXTERNAL_BASE_URL}/get_homepage?lang_id=${langId}&website_id=${websiteId}`
@@ -24,18 +27,15 @@ export const getHomepage = async ({
   }
 };
 
-// 🔥 LOCAL BACKEND API (FINAL FIXED)
-const LOCAL_BASE_URL = "http://localhost:5000/api";
-
 export const createOrder = async (data) => {
   try {
-    const token = localStorage.getItem("token"); // 🔥 ADD THIS
+    const token = localStorage.getItem("token");
 
     const res = await fetch(`${LOCAL_BASE_URL}/order`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // 🔥 MOST IMPORTANT
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     });
@@ -47,8 +47,7 @@ export const createOrder = async (data) => {
 
     return await res.json();
   } catch (err) {
-    console.log("❌ Create Order Error:", err.message);
+    console.log("Create Order Error:", err.message);
     throw err;
   }
 };
-

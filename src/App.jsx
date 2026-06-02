@@ -36,13 +36,13 @@ export default function App() {
         <Route path="/contact-us" element={<ContactUs />} />
 
         <Route path="terms-and-conditions" element={<TermsConditions />} />
-<Route path="privacy-policy" element={<PrivacyPolicy />} />
-<Route path="our-guides" element={<OurGuides />} />
-<Route path="careers" element={<Careers />} />
-<Route path="faqs" element={<Faqs />} />
-<Route path="fleet-page" element={<FleetPage />} />
-<Route path="sitemap" element={<Sitemap />} />
-<Route path="express-checkout" element={<ExpressCheckout />} />
+        <Route path="privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="our-guides" element={<OurGuides />} />
+        <Route path="careers" element={<Careers />} />
+        <Route path="faqs" element={<Faqs />} />
+        <Route path="fleet-page" element={<FleetPage />} />
+        <Route path="sitemap" element={<Sitemap />} />
+        <Route path="express-checkout" element={<ExpressCheckout />} />
 
         <Route path="/" element={<Layout />}>
           <Route path="/login" element={<Login />} />

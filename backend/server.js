@@ -7,7 +7,20 @@ const cors = require("cors");
 const app = express();
 
 // ✅ Middleware
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://redwoodnationalparktours.com",
+  "https://www.redwoodnationalparktours.com",
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 
@@ -55,5 +68,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(` Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

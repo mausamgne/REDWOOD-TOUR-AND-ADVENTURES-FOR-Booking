@@ -14,6 +14,8 @@ export default function CheckoutPage() {
   const { cartItems, calculateItemTotal, subtotal, grandTotal, clearCart } =
     useCart();
   const navigate = useNavigate();
+  const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
   const user = JSON.parse(localStorage.getItem("user"));
 
   const [agreeTerms, setAgreeTerms] = useState(false);
@@ -55,21 +57,21 @@ export default function CheckoutPage() {
         const token = localStorage.getItem("token");
         if (!token) return;
 
-        const res1 = await fetch("http://localhost:5000/api/auth/profile", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res1 = await fetch(`${API_BASE_URL}/api/auth/profile`, {
+  method: "GET",
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
         const data1 = await res1.json();
 
         // 🔥 CARD FETCH ()
-        const res2 = await fetch("http://localhost:5000/api/order/card", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res2 = await fetch(`${API_BASE_URL}/api/order/card`, {
+  method: "GET",
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
         const data2 = await res2.json();
 
         if (data1.success && data2.success) {
@@ -234,17 +236,26 @@ export default function CheckoutPage() {
     const rawExpiry = form.expiry.replace("/", "");
 
     if (rawExpiry.length !== 6) {
-      newErrors.expiry = "Invalid expiry date";
-    } else {
-      const month = Number(rawExpiry.slice(0, 2));
-      const year = Number(rawExpiry.slice(2));
+  newErrors.expiry = "Invalid expiry date";
+} else {
+  const month = Number(rawExpiry.slice(0, 2));
+  const year = Number(rawExpiry.slice(2));
 
-      if (month < 1 || month > 12) {
-        newErrors.expiry = "Month must be between 01–12";
-      } else if (year < new Date().getFullYear()) {
-        newErrors.expiry = "Card has expired";
-      }
-    }
+  const today = new Date();
+  const currentMonth = today.getMonth() + 1;
+  const currentYear = today.getFullYear();
+  const maxYear = 2042;
+
+  if (month < 1 || month > 12) {
+    newErrors.expiry = "Month must be between 01-12";
+  } else if (
+    year < currentYear ||
+    (year === currentYear && month < currentMonth) ||
+    year > maxYear
+  ) {
+    newErrors.expiry = "Expiry must be from current month to 2042";
+  }
+}
 
     // Terms
     if (!agreeTerms) {
@@ -297,13 +308,6 @@ if (duplicateBooking) {
   return;
 }
 
-// ❌ BLOCK
-// if (duplicateBooking) {
-//   toast.error(
-//     "You already booked this tour for this date."
-//   );
-//   return;
-// }      // 🔥
       const user = JSON.parse(localStorage.getItem("user"));
       const userId = user?._id;
 
@@ -382,7 +386,7 @@ if (duplicateBooking) {
         const user = JSON.parse(localStorage.getItem("user"));
         // const userId = user?._id;
 
-        await fetch(`http://localhost:5000/api/auth/profile`, {
+        await fetch(`${API_BASE_URL}/api/auth/profile`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -421,22 +425,7 @@ console.log(
   JSON.parse(localStorage.getItem("placedOrders"))
 );
       clearCart();
-//       const newBookings = cartItems.map((item) => ({
-//   title: item.title?.trim().toLowerCase(),
-//   travelDate: new Date(
-//     item.travelDate || item.date
-//   )
-//     .toISOString()
-//     .split("T")[0],
-// }));
 
-// localStorage.setItem(
-//   "placedOrders",
-//   JSON.stringify([
-//     ...previousOrders,
-//     ...newBookings,
-//   ])
-// );
       navigate("/order-placed");
     } catch (err) {
       console.log("Error saving order:", err);
@@ -969,42 +958,58 @@ console.log(
                   maxLength={7}
                   inputMode="numeric"
                   onChange={(e) => {
-                    const rawValue = e.target.value.replace(/\D/g, "");
-                    handleChange("expiry", rawValue.slice(0, 6));
+  const rawValue = e.target.value.replace(/\D/g, "");
+  const slicedValue = rawValue.slice(0, 6);
 
-                    // 🔥 SIMPLE VALIDATION
-                    if (!rawValue) {
-                      setErrors((prev) => ({
-                        ...prev,
-                        expiry: "* Expiry date is required",
-                      }));
-                    } else if (rawValue.length < 6) {
-                      setErrors((prev) => ({
-                        ...prev,
-                        expiry: "Invalid expiry date",
-                      }));
-                    } else {
-                      const month = Number(rawValue.slice(0, 2));
-                      const year = Number(rawValue.slice(2));
+  handleChange("expiry", slicedValue);
 
-                      if (
-                        month < 1 ||
-                        month > 12 ||
-                        year < 2026 ||
-                        year > 2042
-                      ) {
-                        setErrors((prev) => ({
-                          ...prev,
-                          expiry: "Invalid expiry date", // ✅ simple message
-                        }));
-                      } else {
-                        setErrors((prev) => ({
-                          ...prev,
-                          expiry: "",
-                        }));
-                      }
-                    }
-                  }}
+  if (!slicedValue) {
+    setErrors((prev) => ({
+      ...prev,
+      expiry: "* Expiry date is required",
+    }));
+    return;
+  }
+
+  if (slicedValue.length < 6) {
+    setErrors((prev) => ({
+      ...prev,
+      expiry: "Invalid expiry date",
+    }));
+    return;
+  }
+
+  const month = Number(slicedValue.slice(0, 2));
+  const year = Number(slicedValue.slice(2));
+
+  const today = new Date();
+  const currentMonth = today.getMonth() + 1;
+  const currentYear = today.getFullYear();
+  const maxYear = 2042;
+
+  const isInvalidMonth = month < 1 || month > 12;
+  const isPastYear = year < currentYear;
+  const isPastMonthInCurrentYear =
+    year === currentYear && month < currentMonth;
+  const isAfterMaxYear = year > maxYear;
+
+  if (
+    isInvalidMonth ||
+    isPastYear ||
+    isPastMonthInCurrentYear ||
+    isAfterMaxYear
+  ) {
+    setErrors((prev) => ({
+      ...prev,
+      expiry: "Expiry must be from current month to 2042",
+    }));
+  } else {
+    setErrors((prev) => ({
+      ...prev,
+      expiry: "",
+    }));
+  }
+}}
                   className={`w-full border rounded-lg p-4 outline-none ${
                     errors.expiry ? "border-red-500" : "border-black"
                   }`}

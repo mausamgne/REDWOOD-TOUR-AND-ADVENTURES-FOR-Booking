@@ -8,6 +8,12 @@ const Card = require("../models/Card");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
+const sgMail = require("@sendgrid/mail");
+
+if (process.env.SENDGRID_API_KEY) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+}
+
 // 🔐 AUTH MIDDLEWARE
 const authMiddleware = (req, res, next) => {
   const header = req.headers.authorization;
@@ -25,6 +31,84 @@ const authMiddleware = (req, res, next) => {
   } catch {
     return res.status(401).json({ message: "Invalid token ❌" });
   }
+};
+
+const sendOrderConfirmationEmail = async (order) => {
+  if (!process.env.SENDGRID_API_KEY || !process.env.SENDGRID_FROM_EMAIL) {
+    console.log("SendGrid is not configured. Skipping email.");
+    return;
+  }
+
+  const customerEmail = order.email || order.user?.email;
+const customerName =
+  `${order.firstName || ""} ${order.lastName || ""}`.trim() ||
+  `${order.user?.firstName || ""} ${order.user?.lastName || ""}`.trim();
+
+  if (!customerEmail) {
+    console.log("Customer email missing. Skipping email.");
+    return;
+  }
+
+  const itemsHtml = order.items
+    .map(
+      (item) => `
+        <tr>
+          <td style="padding:8px;border-bottom:1px solid #eee;">${item.title}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;">${item.quantity}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;">${
+            item.travelDate
+              ? new Date(item.travelDate).toLocaleDateString()
+              : "N/A"
+          }</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;">${
+            item.vehicle?.name || "N/A"
+          }</td>
+        </tr>
+      `
+    )
+    .join("");
+
+  await sgMail.send({
+    to: customerEmail,
+    from: process.env.SENDGRID_FROM_EMAIL,
+    subject: "Your Redwood Tour Booking Confirmation",
+    html: `
+      <div style="font-family:Arial,sans-serif;color:#222;line-height:1.6;">
+        <h2 style="color:#4f772d;">Booking Confirmed</h2>
+        <p>Hello ${customerName || "Guest"},</p>
+        <p>Thank you for booking with Redwood National Park Tours.</p>
+
+        <h3>Booking Details</h3>
+        <table style="border-collapse:collapse;width:100%;max-width:700px;">
+          <thead>
+            <tr style="background:#4f772d;color:white;">
+              <th style="padding:8px;text-align:left;">Tour</th>
+              <th style="padding:8px;text-align:left;">Guests</th>
+              <th style="padding:8px;text-align:left;">Travel Date</th>
+              <th style="padding:8px;text-align:left;">Vehicle</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsHtml}
+          </tbody>
+        </table>
+
+        <p><strong>Total Amount:</strong> $${Number(
+          order.amount || 0
+        ).toLocaleString()}</p>
+
+        <p><strong>Pickup Location:</strong><br/>
+          ${order.address?.address || ""}<br/>
+          ${order.address?.city || ""}, ${order.address?.country || ""} ${
+      order.address?.zip || ""
+    }
+        </p>
+
+        <p>If you have any questions, please contact us.</p>
+        <p style="color:#4f772d;font-weight:bold;">Redwood National Park Tours</p>
+      </div>
+    `,
+  });
 };
 
 // 🔥 CREATE ORDER
@@ -100,7 +184,7 @@ router.post("/", authMiddleware, async (req, res) => {
       last4 = existingCard.last4;
     } else {
       // 🔥 NEW CARD FLOW
-      let cleanNumber = cardNumber?.replace(/\D/g, "");
+       cleanNumber = cardNumber?.replace(/\D/g, "");
 
       if (!cleanNumber || cleanNumber.length !== 16) {
         return res.status(400).json({
@@ -162,10 +246,16 @@ if (existingOrder) {
 }
     // ✅ ORDER CREATE
     const order = await Order.create({
-      user: user._id,
-      address: address._id,
-      card: card._id,
-      items: data.items.map((item) => ({
+  user: user._id,
+  address: address._id,
+  card: card._id,
+
+  firstName: data.firstName || user.firstName || "",
+  lastName: data.lastName || user.lastName || "",
+  email: data.email || user.email || "",
+  phone: data.phone || "",
+
+  items: data.items.map((item) => ({
         title: item.title,
         quantity: item.quantity,
         travelDate: item.travelDate,
@@ -177,7 +267,7 @@ if (existingOrder) {
         },
       })),
       amount: data.amount,
-      phone: data.phone,
+      // phone: data.phone,
       passengerCount: data.items?.[0]?.quantity || 1,
       pickupDate: new Date(
         req.body.items?.[0]?.travelDate || req.body.items?.[0]?.date,
@@ -189,6 +279,11 @@ if (existingOrder) {
       .populate("user")
       .populate("address")
       .populate("card");
+      try {
+  await sendOrderConfirmationEmail(fullOrder);
+} catch (emailError) {
+  console.error("Order email failed:", emailError.message);
+}
 
     res.status(201).json({
       success: true,

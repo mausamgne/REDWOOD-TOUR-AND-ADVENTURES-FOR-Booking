@@ -223,7 +223,7 @@ console.log(cartItems);
               to="/"
               className="block bg-[#4a6b2f] text-white text-center py-4 mt-6 font-semibold rounded"
             >
-              ‹ CLICK HERE TO ADD MORE TOURS
+               CLICK HERE TO ADD MORE TOURS
             </Link>
           </div>
 

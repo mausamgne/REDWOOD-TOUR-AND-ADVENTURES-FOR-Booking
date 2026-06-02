@@ -53,27 +53,30 @@ export default function DesktopNav({ items = [] }) {
                 </button>
 
                 {/* ✅ DROPDOWN */}
-                {isActive && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 z-50">
-                    {/* ✅ GREEN BORDER ARROW */}
-                    <div
-                      className="absolute -top-[14px] left-1/2 -translate-x-1/2 w-0 h-0
-                      border-l-[14px] border-l-transparent
-                      border-r-[14px] border-r-transparent
-                      border-b-[14px] border-b-primary"
-                    ></div>
+              {isActive && (
+  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 z-50">
 
-                    {/* ✅ WHITE ARROW */}
-                    <div
-                      className="absolute -top-3 left-1/2 -translate-x-1/2 w-0 h-0
-                      border-l-[12px] border-l-transparent
-                      border-r-[12px] border-r-transparent
-                      border-b-[12px] border-b-white"
-                    ></div>
+    <div
+      className="
+        absolute
+        top-1
+        left-1/2
+        -translate-x-1/2
+        w-6
+        h-6
+        bg-white
+        rotate-45
+        border-l
+        border-t
+        border-gray-200
+        shadow-sm
+        z-10
+      "
+    />
 
-                    <CategoryPreview category={item} tours={item?.tours} />
-                  </div>
-                )}
+    <CategoryPreview category={item} tours={item?.tours} />
+  </div>
+)}
               </div>
             );
           })}

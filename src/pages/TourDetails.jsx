@@ -411,60 +411,53 @@ export default function TourDetails() {
 
                   const bookingDate = formatDate(selectedDate);
 
-const tourItem = {
-  id: Date.now(),
-  title: tourData?.tour_title?.trim(),
-  quantity: guests,
-  travelDate: bookingDate,
-  date: bookingDate,
-  vehicle: selectedVehicle,
-  price: pricePerPerson,
-  total: total,
-};
+                  const tourItem = {
+                    id: Date.now(),
+                    title: tourData?.tour_title?.trim(),
+                    quantity: guests,
+                    travelDate: bookingDate,
+                    date: bookingDate,
+                    vehicle: selectedVehicle,
+                    price: pricePerPerson,
+                    total: total,
+                  };
 
-// ✅ CHECK DUPLICATE BOOKING
-// ✅ GET PREVIOUS PLACED ORDERS
-const previousOrders =
-  JSON.parse(localStorage.getItem("placedOrders")) || [];
+                  // ✅ CHECK DUPLICATE BOOKING
+                  // ✅ GET PREVIOUS PLACED ORDERS
+                  const previousOrders =
+                    JSON.parse(localStorage.getItem("placedOrders")) || [];
 
-// ✅ CHECK DUPLICATE FROM PREVIOUS ORDERS
-const alreadyBooked = previousOrders.some((order) => {
+                  // ✅ CHECK DUPLICATE FROM PREVIOUS ORDERS
+                  const alreadyBooked = previousOrders.some((order) => {
+                    const savedTitle = order.title?.trim().toLowerCase();
 
-  const savedTitle =
-    order.title?.trim().toLowerCase();
+                    const currentTitle = tourItem.title?.trim().toLowerCase();
 
-  const currentTitle =
-    tourItem.title?.trim().toLowerCase();
+                    const savedDate = order.travelDate || order.date;
 
-  const savedDate =
-    order.travelDate || order.date;
+                    const currentDate = tourItem.travelDate;
 
-  const currentDate =
-    tourItem.travelDate;
+                    return (
+                      savedTitle === currentTitle && savedDate === currentDate
+                    );
+                  });
 
-  return (
-    savedTitle === currentTitle &&
-    savedDate === currentDate
-  );
-});
+                  // ❌ BLOCK SAME TOUR + SAME DATE
+                  if (alreadyBooked) {
+                    toast.error("You already booked this tour for this date.");
 
-// ❌ BLOCK SAME TOUR + SAME DATE
-if (alreadyBooked) {
-  toast.error(
-    "You already booked this tour for this date."
-  );
+                    return;
+                  }
 
-  return;
-}
+                  // ✅ ADD TO CART
+                  addToCart(tourItem);
 
-// ✅ ADD TO CART
-addToCart(tourItem);
-
-navigate("/cart");
-                  
+                  navigate("/cart");
                 }}
-                className="bg-green-600 hover:bg-green-700 text-white px-11 py-3 rounded-md font-semibold"
-              >
+               
+  className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-md font-semibold whitespace-nowrap"
+>
+ 
                 Confirm Booking
               </button>
             </div>

@@ -15,6 +15,6 @@ export default function Navbar({ items, tours, user }) {
       <div className="w-full max-w-7xl  px-6">
         <DesktopNav items={filteredItems} tours={tours} />
       </div>
-    </nav>
+    </nav> 
   );
 }

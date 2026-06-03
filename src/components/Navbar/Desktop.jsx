@@ -28,13 +28,13 @@ export default function DesktopNav({ items = [] }) {
         {/* HOME ICON */}
         <Link
           href="/"
-          className="flex items-center justify-center mr-10 hover:opacity-80 transition"
+          className="flex items-center justify-center mr-4 ml-0 hover:opacity-80 transition"
         >
           <Home size={30} />
         </Link>
 
         {/* NAV ITEMS */}
-        <div className="flex items-center gap-16 whitespace-nowrap text-[18px] flex-1 justify-between">
+        <div className="flex items-center gap-8 whitespace-nowrap text-[18px] flex-1">
           {filteredItems.map((item) => {
             const isActive = activeMenu === item.id;
 

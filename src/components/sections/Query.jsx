@@ -45,7 +45,7 @@ export default function QueryCTA({
               href={`tel:${contactNumber}`}
               variant="outline"
               size="lg"
-              className="rounded-full text-primary border border-primary bg-white hover:bg-primary hover:text-white"
+              className="rounded-xl text-primary border border-primary bg-white hover:bg-primary hover:text-white"
             >
               Call Us Now
             </Button>
